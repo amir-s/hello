@@ -60,7 +60,7 @@ export default function Background({ children }: Props) {
   }, [nextImageIndex, setImageIndex, setNextImageIndex, setLastUpate]);
 
   useEffect(() => {
-    if (lastUpate + 3 * 60 * 1000 > new Date().getTime()) return;
+    if (lastUpate + 3 * 60 * 60 * 1000 > new Date().getTime()) return;
     next();
   }, [lastUpate, next]);
 
