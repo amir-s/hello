@@ -6,7 +6,7 @@ import { Footer } from 'components/Footer';
 
 import './App.css';
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <Background>
       <Header />

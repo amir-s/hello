@@ -12,7 +12,7 @@ import photos, { Photo } from './data';
 import './Background.scss';
 
 export interface Props {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export interface BackgroundContext {
