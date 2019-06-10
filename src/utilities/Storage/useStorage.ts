@@ -1,10 +1,7 @@
 import { useState, useCallback } from 'react';
 import Store from './Store';
 
-export default function useStorage<S>(
-  id: string,
-  initialValue: S
-): [S, (newValue: S) => void] {
+export default function useStorage<S>(id: string, initialValue: S): [S, (newValue: S) => void] {
   const persistedValue = Store.get(id);
   const [value, setValue] = useState<S>(persistedValue || initialValue);
 

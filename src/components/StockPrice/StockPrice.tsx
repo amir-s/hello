@@ -20,15 +20,14 @@ const useStockPrice = (symbol: string, cacheTimeout: number = 30000) => {
     if (detail.upatedAt + cacheTimeout > new Date().getTime()) return;
 
     const updatePrice = async () => {
-      const response = await fetch(
-        `https://cloud.iexapis.com/stable/stock/${symbol.toUpperCase()}/quote?token=${API_KEY}`
-      );
+      const response = await fetch(`https://cloud.iexapis.com/stable/stock/${symbol.toUpperCase()}/quote?token=${API_KEY}`);
       const result = await response.json();
-      console.log(result);
+
       const price = normalize(result['latestPrice']);
       const change = normalize(result['change'], true);
       const changePercent = normalize(Math.abs(100 * result['changePercent']));
       const sign = result['change'] < 0 ? -1 : result['change'] > 0 ? +1 : 0;
+      
       setDetail({
         upatedAt: new Date().getTime(),
         price,

@@ -1,10 +1,4 @@
-import React, {
-  ReactNode,
-  createContext,
-  useState,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { ReactNode, createContext, useState, useEffect, useCallback } from 'react';
 import { useStorage } from 'utilities/Storage';
 
 import photos, { Photo } from './data';
@@ -25,14 +19,8 @@ export const backgroundContext = createContext<BackgroundContext | null>(null);
 
 export default function Background({ children }: Props) {
   const [lastUpate, setLastUpate] = useStorage('lastBackgroundUpadte', 0);
-  const [imageIndex, setImageIndex] = useStorage(
-    'imageIndex',
-    rand(photos.length)
-  );
-  const [nextImageIndex, setNextImageIndex] = useStorage(
-    'nextImageIndex',
-    rand(photos.length)
-  );
+  const [imageIndex, setImageIndex] = useStorage('imageIndex', rand(photos.length));
+  const [nextImageIndex, setNextImageIndex] = useStorage('nextImageIndex', rand(photos.length));
 
   const [nextIsLoading, setNextIsLoading] = useState(true);
 
@@ -40,9 +28,7 @@ export default function Background({ children }: Props) {
   const nextImage = photos[nextImageIndex];
 
   const style = {
-    backgroundImage: `url(https://burst.shopifycdn.com/photos/${
-      image.handle
-    }_2560x.jpg)`,
+    backgroundImage: `url(https://burst.shopifycdn.com/photos/${image.handle}_2560x.jpg)`,
   };
 
   useEffect(() => {
@@ -52,9 +38,7 @@ export default function Background({ children }: Props) {
     let timeout: any;
 
     const img = new Image();
-    img.src = `https://burst.shopifycdn.com/photos/${
-      nextImage.handle
-    }_2560x.jpg`;
+    img.src = `https://burst.shopifycdn.com/photos/${nextImage.handle}_2560x.jpg`;
 
     img.onload = () => {
       if (cancelled) return;
