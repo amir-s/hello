@@ -1,84 +1,61 @@
-import React, { ReactNode, createContext, useState, useEffect, useCallback } from 'react';
+import React, { ReactNode, createContext, useEffect } from 'react';
 import { useStorage } from 'utilities/Storage';
 
-import photos, { Photo } from './data';
-
 import './Background.scss';
+
+export interface Photo {
+  title: string;
+  url: string;
+  link: string;
+  description: {
+    title: string;
+    location: string;
+    photographer: string;
+    source: string;
+  };
+}
+
+const DEFAULT_PHOTO: Photo = {
+  title: '',
+  url: '',
+  link: '',
+  description: {
+    title: '',
+    location: '',
+    photographer: '',
+    source: '',
+  },
+};
 
 export interface Props {
   children?: ReactNode;
 }
 
-export interface BackgroundContext {
-  currentPhoto: Photo;
-  nextIsLoading: boolean;
-  next(): void;
-}
-
-export const backgroundContext = createContext<BackgroundContext | null>(null);
+export const backgroundContext = createContext<Photo>(DEFAULT_PHOTO);
 
 export default function Background({ children }: Props) {
-  const [lastUpate, setLastUpate] = useStorage('lastBackgroundUpadte', 0);
-  const [imageIndex, setImageIndex] = useStorage('imageIndex', rand(photos.length));
-  const [nextImageIndex, setNextImageIndex] = useStorage('nextImageIndex', rand(photos.length));
-
-  const [nextIsLoading, setNextIsLoading] = useState(true);
-
-  const image = photos[imageIndex];
-  const nextImage = photos[nextImageIndex];
+  const [lastUpate, setLastUpate] = useStorage('lastUpadte', 0);
+  const [photo, setPhoto] = useStorage<Photo>('currentPhoto', DEFAULT_PHOTO);
 
   const style = {
-    backgroundImage: `url(https://burst.shopifycdn.com/photos/${image.handle}_2560x.jpg)`,
+    backgroundImage: photo ? `url(${photo.url})` : '',
   };
 
   useEffect(() => {
-    setNextIsLoading(true);
-
-    let cancelled = false;
-    let timeout: any;
-
-    const img = new Image();
-    img.src = `https://burst.shopifycdn.com/photos/${nextImage.handle}_2560x.jpg`;
-
-    img.onload = () => {
-      if (cancelled) return;
-      timeout = setTimeout(() => {
-        setNextIsLoading(false);
-      }, 1000);
-    };
-
-    return () => {
-      cancelled = true;
-      clearTimeout(timeout);
-    };
-  }, [nextImage]);
-
-  const next = useCallback(() => {
-    setImageIndex(nextImageIndex);
-    setNextImageIndex(rand(photos.length));
-    setLastUpate(new Date().getTime());
-  }, [nextImageIndex, setImageIndex, setNextImageIndex, setLastUpate]);
-
-  useEffect(() => {
     if (lastUpate + 3 * 60 * 60 * 1000 > new Date().getTime()) return;
-    next();
-  }, [lastUpate, next]);
+
+    const update = async () => {
+      const response = await fetch('https://bing-wp.herokuapp.com');
+      const photo = (await response.json()) as Photo;
+      setPhoto(photo);
+      setLastUpate(new Date().getTime());
+    };
+    update();
+  }, [lastUpate, setPhoto, setLastUpate]);
 
   return (
     <div className="Background" style={style}>
-      <backgroundContext.Provider
-        value={{
-          currentPhoto: image,
-          next,
-          nextIsLoading,
-        }}
-      >
-        {children}
-      </backgroundContext.Provider>
+      <backgroundContext.Provider value={photo}>{children}</backgroundContext.Provider>
     </div>
   );
-}
-
-function rand(high: number, low: number = 0) {
-  return Math.floor(Math.random() * (high - low)) + low;
 }
