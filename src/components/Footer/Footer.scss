@@ -32,7 +32,12 @@ footer {
   font-size: 13px;
   cursor: pointer;
   color: #ccc;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
+}
+
+#refresh-btn.disabled {
+  opacity: 0.4;
+  cursor: alias;
 }
 
 #credits h1 {
