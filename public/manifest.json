@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "name": "Hello",
+  "name": "Shopify Hello",
   "description": "",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Amir Saboury",
 
   "chrome_url_overrides": {
