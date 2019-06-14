@@ -3,7 +3,7 @@
 
   "name": "Hello",
   "description": "",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Amir Saboury",
 
   "chrome_url_overrides": {
