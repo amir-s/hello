@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+
+  "name": "Hello",
+  "description": "",
+  "version": "0.0.2",
+  "author": "Amir Saboury",
+
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+
+  "icons": {
+    "16": "images/logo.png",
+    "48": "images/logo.png",
+    "128": "images/logo.png"
+  },
+  "permissions": ["activeTab", "storage"]
+}
