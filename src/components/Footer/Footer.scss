@@ -22,7 +22,6 @@ footer {
   text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
 }
 
-#quote,
 #credits {
   color: #eee;
 }
@@ -69,4 +68,40 @@ footer {
 
 .stock {
   margin-bottom: 0;
+}
+
+.remove-stock {
+  position: absolute;
+  left: -27px;
+  padding: 5px;
+  bottom: 0px;
+  font-size: 80%;
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: white;
+}
+.remove-stock:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+.save-stock {
+  position: absolute;
+  left: -27px;
+  padding: 5px;
+  bottom: 0px;
+  font-size: 80%;
+  color: white;
+}
+.save-stock:hover {
+  cursor: pointer;
+}
+#stock-list {
+  position: relative;
+}
+.input {
+  border: 1px solid black;
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 15px;
+  width: 300px;
 }
