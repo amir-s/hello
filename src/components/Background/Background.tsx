@@ -54,7 +54,7 @@ export default function Background({ children }: Props) {
   const changePhoto = async (to: 'random' | 'daily' = 'random') => {
     setLoading(true);
 
-    const response = await fetch(`https://bing-wp.herokuapp.com/${to === 'random' ? 'random' : ''}`);
+    const response = await fetch(`https://hello-data.amirs.dev/v1/photo/${to === 'random' ? 'random' : ''}`);
     const photo = (await response.json()) as Photo;
     const img = new Image();
     img.src = photo.url;
@@ -70,7 +70,7 @@ export default function Background({ children }: Props) {
     if (lastUpate + 24 * 60 * 60 * 1000 > new Date().getTime()) return;
 
     const update = async () => {
-      const response = await fetch('https://bing-wp.herokuapp.com');
+      const response = await fetch('https://hello-data.amirs.dev/v1/photo');
       const photo = (await response.json()) as Photo;
       setPhoto(photo);
       setLastUpate(new Date().getTime());

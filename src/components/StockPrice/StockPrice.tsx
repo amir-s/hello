@@ -5,38 +5,41 @@ export interface Props {
   symbol: string;
 }
 
-const API_KEY = 'pk_d8e6c3793f0743d3bef721a8b58bab8e';
-
 const useStockPrice = (symbol: string, cacheTimeout: number = 30000) => {
   const [detail, setDetail] = useStorage(`stock-${symbol}`, {
     upatedAt: 0,
     price: '0',
     change: '0',
-    changePercent: '0',
+    changePercentage: '0',
     sign: 0,
+    currency: '',
+    symbol: '',
+    state: 'loading',
   });
 
   useEffect(() => {
     if (detail.upatedAt + cacheTimeout > new Date().getTime()) return;
 
     const updatePrice = async () => {
-      const response = await fetch(
-        `https://cloud.iexapis.com/stable/stock/${symbol.toUpperCase()}/quote?token=${API_KEY}`
-      );
-      const result = await response.json();
+      try {
+        const response = await fetch(`https://hello-data.amirs.dev/v1/stock/${symbol}`);
+        const result = await response.json();
 
-      const price = normalize(result['latestPrice']);
-      const change = normalize(result['change'], true);
-      const changePercent = normalize(Math.abs(100 * result['changePercent']));
-      const sign = result['change'] < 0 ? -1 : result['change'] > 0 ? +1 : 0;
+        const sign = result['change'] < 0 ? -1 : result['change'] > 0 ? +1 : 0;
 
-      setDetail({
-        upatedAt: new Date().getTime(),
-        price,
-        change,
-        changePercent,
-        sign,
-      });
+        setDetail({
+          ...result,
+          upatedAt: new Date().getTime(),
+          sign,
+          state: 'loaded',
+        });
+      } catch (_) {
+        setDetail({
+          ...detail,
+          upatedAt: new Date().getTime(),
+          state: 'error',
+        });
+      }
     };
 
     updatePrice();
@@ -46,24 +49,32 @@ const useStockPrice = (symbol: string, cacheTimeout: number = 30000) => {
 };
 
 export default function StockPrice({ symbol }: Props) {
-  const { price, change, changePercent, sign } = useStockPrice(symbol);
+  const { state, price, change, changePercentage, sign, currency, symbol: fetchedSymbol } = useStockPrice(symbol);
+
+  const detail =
+    state === 'loaded' ? (
+      <small>
+        {currency || 'USD'} {change} ({changePercentage}%)
+      </small>
+    ) : null;
+
+  const priceDetail =
+    state === 'error' ? (
+      <small>---</small>
+    ) : state === 'loading' ? (
+      <small>
+        <i className="fas fa-spinner fa-pulse" />
+      </small>
+    ) : (
+      price
+    );
   return (
     <h5 className="heading--5 stock">
       <i className={`fas fa-angle-${sign < 0 ? 'down' : 'up'}`} />
       &nbsp;
-      {symbol.toUpperCase()} {price}
+      {(fetchedSymbol || symbol).toUpperCase()} {priceDetail}
       &nbsp;
-      <small>
-        USD {change} ({changePercent}%){' '}
-      </small>
+      {detail}
     </h5>
   );
 }
-
-const normalize = (value: string | number, signed: boolean = false) => {
-  const isNegative = Number(value) < 0;
-  const normalizedValue = Math.abs(Number(value)).toFixed(2);
-  const positive = signed ? '+' : '';
-
-  return `${isNegative ? '−' : positive}${normalizedValue}`;
-};

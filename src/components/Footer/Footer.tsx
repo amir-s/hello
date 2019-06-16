@@ -6,7 +6,7 @@ import { StockPrice } from 'components/StockPrice';
 import { useStorage } from 'utilities/Storage';
 
 export default function Footer() {
-  const [stocks, setStocks] = useStorage('stocks', ['SHOP']);
+  const [stocks, setStocks] = useStorage('stock-list', ['SHOP/nyse']);
   const [editing, setEditing] = useState(false);
   const [rawStocks, setRawStocks] = useState('');
   const input = useRef<any>();
