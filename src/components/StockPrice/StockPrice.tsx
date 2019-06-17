@@ -54,7 +54,7 @@ export default function StockPrice({ symbol }: Props) {
   const detail =
     state === 'loaded' ? (
       <small>
-        {currency || 'USD'} {change} ({changePercentage}%)
+        {currency || 'USD'} {change.replace(/\-/, '−')} ({changePercentage}%)
       </small>
     ) : null;
 
