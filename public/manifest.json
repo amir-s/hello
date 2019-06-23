@@ -3,7 +3,7 @@
 
   "name": "Shopify Hello",
   "description": "",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "Amir Saboury",
 
   "chrome_url_overrides": {
