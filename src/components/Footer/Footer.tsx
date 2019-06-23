@@ -4,11 +4,12 @@ import { usePhoto, useUtils } from 'components/Background';
 import './Footer.scss';
 import { StockPrice } from 'components/StockPrice';
 import { useStorage } from 'utilities/Storage';
+import { CryptoPrice } from 'components/CryptoPrice';
 
 export default function Footer() {
-  const [stocks, setStocks] = useStorage('stock-list', ['SHOP/nyse']);
+  const [watchList, setWatchList] = useStorage('stock-list', ['SHOP/nyse']);
   const [editing, setEditing] = useState(false);
-  const [rawStocks, setRawStocks] = useState('');
+  const [rawWatchList, setRawWatchList] = useState('');
   const input = useRef<any>();
 
   const photo = usePhoto();
@@ -19,15 +20,15 @@ export default function Footer() {
   };
 
   const edit = () => {
-    setRawStocks(stocks.join(', '));
+    setRawWatchList(watchList.join(', '));
     setEditing(true);
     setTimeout(() => {
       if (input && input.current) input.current.focus();
     }, 5);
   };
   const save = () => {
-    setStocks(
-      rawStocks
+    setWatchList(
+      rawWatchList
         .split(',')
         .map(item => item.trim().toUpperCase())
         .filter(Boolean)
@@ -61,8 +62,8 @@ export default function Footer() {
               ref={input}
               className="input"
               type="text"
-              value={rawStocks}
-              onChange={e => setRawStocks(e.target.value)}
+              value={rawWatchList}
+              onChange={e => setRawWatchList(e.target.value)}
               onKeyPress={e => {
                 e.key === 'Enter' && save();
               }}
@@ -70,7 +71,14 @@ export default function Footer() {
             />
           )}
           {!editing && <i className="fas fa-edit remove-stock" onClick={edit} />}
-          {!editing && stocks.map((symbol, index) => <StockPrice key={symbol + index} symbol={symbol} />)}
+          {!editing &&
+            watchList.map((symbol, index) => {
+              if (symbol.startsWith('CRYPTO/')) {
+                const handle = symbol.replace('CRYPTO/', '');
+                return <CryptoPrice key={symbol + index} handle={handle} />;
+              }
+              return <StockPrice key={symbol + index} symbol={symbol} />;
+            })}
         </div>
         <div id="credits">
           <h1 className="heading--5">{photo.title}</h1>
