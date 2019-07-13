@@ -1,12 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { usePhoto, useUtils } from 'components/Background';
 
-import './Footer.scss';
 import { StockPrice } from 'components/StockPrice';
 import { useStorage } from 'utilities/Storage';
 import { CryptoPrice } from 'components/CryptoPrice';
+import { Settings } from 'components/Settings';
+
+import './Footer.scss';
 
 export default function Footer() {
+  const [showSetting, setShowSetting] = useState(!false);
   const [watchList, setWatchList] = useStorage('stock-list', ['SHOP/nyse']);
   const [editing, setEditing] = useState(false);
   const [rawWatchList, setRawWatchList] = useState('');
@@ -36,6 +39,10 @@ export default function Footer() {
     setEditing(false);
   };
 
+  const toggleSetting = () => {
+    setShowSetting(!showSetting);
+  };
+
   const location = photo.description.location ? (
     <span id="location">
       | <i className="fas fa-map-marker-alt" /> {photo.description.location}
@@ -54,6 +61,7 @@ export default function Footer() {
   const shuffleIcon = loading ? <i className="fas fa-spinner fa-pulse" /> : <i className="fas fa-random" />;
   return (
     <footer>
+      <Settings show={showSetting} toggle={toggleSetting} />
       <div className="d-flex justify-content-between align-items-end">
         <div id="stock-list">
           {editing && <i className="fas fa-save save-stock" onClick={save} />}
@@ -90,8 +98,14 @@ export default function Footer() {
         </div>
       </div>
       <div className="d-flex justify-content-between align-items-center sep">
-        <div id="refresh-btn" className={loading ? 'disabled' : ''} onClick={shuffle}>
-          {shuffleIcon} Shuffle
+        <div className="footer-icons">
+          <span id="setting-btn" onClick={toggleSetting}>
+            <i className="fas fa-cog" />
+          </span>
+          <span className="icon-sep" />
+          <span id="refresh-btn" className={loading ? 'disabled' : ''} onClick={shuffle}>
+            {shuffleIcon} Shuffle
+          </span>
         </div>
         <a id="burst-link" href={photo.link}>
           {description} {source}

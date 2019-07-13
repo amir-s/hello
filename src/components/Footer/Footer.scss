@@ -25,13 +25,17 @@ footer {
 #credits {
   color: #eee;
 }
-#refresh-btn,
+.footer-icons,
 #burst-link {
   color: white;
   font-size: 13px;
   cursor: pointer;
   color: #ccc;
   transition: opacity 0.2s ease-in-out;
+}
+.footer-icons .icon-sep{
+  border-right: 1px solid rgba(255, 255, 255, 0.7);
+  margin: 0px 12px;
 }
 
 #refresh-btn.disabled {
